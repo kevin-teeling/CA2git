@@ -1,0 +1,26 @@
+<div class="modal" id="postJobPopOut" ng-controller="appController"> <!-- The Modal plugin is a dialog box/popup window that is displayed on top of the current page -->
+<!-- also pass the appController so we can use the create job function from it -->
+  <div class="modal-dialog">
+    <div class="modal-content">
+	
+      <div class="panel panel-warning title"> <!-- A panel in bootstrap is a bordered box with some padding around its content -->
+        <div class="panel-heading title">            
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>        
+            <h3 class="panel-title">Post Your Odd Job </h3>
+        </div>
+		
+        <div class="panel-body">
+          <form ng-submit="createJob()">
+            <input type="text" ng-model="job.title" class="form-control" placeholder="Job title" required><br>
+            <textarea ng-model="job.description" class="form-control" placeholder="Job Description" required></textarea><br>
+            <input type="number" ng-model="job.total" class="form-control" placeholder="Pay Offered (in euros)" required><br>
+            <input type="submit" value="Post Now" class="btn btn-warning">
+          </form>
+        </div>
+		
+      </div>
+	  
+    </div>
+  </div>
+</div>
+
