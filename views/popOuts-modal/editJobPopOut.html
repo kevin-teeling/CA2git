@@ -1,0 +1,27 @@
+<div class="modal" id="editJobPopOut" ng-controller="appController"> <!-- The Modal plugin is a dialog box/popup window that is displayed on top of the current page -->
+  <div class="modal-dialog">
+    <div class="modal-content"> <!-- styles the modal (border, background-color, etc.). Inside this <div>, add the modal's header, body, and footer. -->
+      
+      <div class="panel panel-info title"> <!-- A panel in bootstrap is a bordered box with some padding around its content -->
+
+        <div class="panel-heading title">            
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>        
+            <h3 class="panel-title">Edit This Odd Job</h3>
+        </div>
+
+        <div class="panel-body">
+          <form ng-submit="editJob(selectedJob)">      
+            <input type="text" ng-model="selectedJob.title" class="form-control" placeholder="Job title" required><br>  
+            <textarea ng-model="selectedJob.description" row="3" class="form-control" placeholder="Job Description" required></textarea><br>
+            <input type="number" ng-model="selectedJob.total" class="form-control" placeholder="Pay Offered (in euros)?" required><br>
+            <input type="submit" value="Update" class="btn btn-info">
+          </form>
+        </div>
+		
+      </div>
+      
+    
+     
+    </div>
+  </div>
+</div>
