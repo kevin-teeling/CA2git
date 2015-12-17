@@ -1,0 +1,28 @@
+<div class="auth-forms title">
+  <h2>Register</h2>
+  <form ng-submit="register(user)"> <!-- call the register function in authcontroler (authcontroller was loaded with this by app router) -->
+    
+    <div class="input-group">
+      <div class="input-group-addon"> <!-- Easily extend form controls by adding text, buttons, or button groups on either side of textual <input>s -->
+      	<span class="glyphicon glyphicon-user" aria-hidden="true"></span> <!-- GLYPHICONS is a library of precisely prepared monochromatic icons and symbols, Bootstrap comes with 260 -->
+      </div>
+      <input type="name" ng-model="user.name" placeholder="Name" class="form-control" required> <!-- sync the input name with the name variable -->
+    </div><br>
+    
+    <div class="input-group">
+      <div class="input-group-addon">
+      	<span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>
+      </div>
+      <input type="email" ng-model="user.email" placeholder="Email" class="form-control" required> <!-- sync the input email with the name variable -->
+    </div><br>
+
+    <div class="input-group">
+      <div class="input-group-addon">
+      	<span class="glyphicon glyphicon-lock" aria-hidden="true"></span>
+      </div>
+      <input type="password" ng-model="user.password" placeholder="Password" class="form-control" required> <!-- sync the input password with the name variable -->
+    </div><br>   
+    
+    <input type="submit" value="Register" class="btn btn-danger"> <!-- display nice button to submit -->
+  </form>
+</div>
