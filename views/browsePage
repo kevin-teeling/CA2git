@@ -1,0 +1,170 @@
+<div class="row">
+	
+<!-- LEFT PANEL -->
+<div class="col-md-5"> <!-- Use the Bootstrap grid layout, 5/12 of the equal-width columns - this should take almost half of the page -->	
+
+	<div class="list-group">
+		<!-- SEARCH TOOL -->
+		<div class="form-group">
+		  <input type="text" ng-model="searchJob" class="form-control" placeholder="Search"></input>
+		</div>
+		
+		<!-- LIST OF JOBS --> <!-- bootstrap list of items, formatt taken from: http://www.w3schools.com/bootstrap/bootstrap_list_groups.asp -->
+		<a ng-repeat="job in jobs | filter: {title: searchJob , status: '!cancelled'} | orderBy: 'datetime':true" ng-href="#/browse/{{job.$id}}">
+			<div class="list-group-item">
+				<div class="row-content">
+					<h4 class="list-group-item-heading"> {{job.title | limitTo:25}}{{ job.title.length > 25? "..." : ""}}</h4>
+				</div>
+				<div class="payment">
+					<div>${{job.total}}</div>
+					<span class="label status" style="background-color: #03a9f4;">Open</span>		        	
+				</div>
+			</div>		    
+			<hr>
+		</a>
+	</div>
+</div>
+
+<!--
+<div>
+				Date Posted: {{job.datetime | date:'medium'}}
+			</div>
+			<div>
+				Requesting: ${{job.total}}
+			</div>-->
+
+<!-- RIGHT PANEL -->
+<div class="col-md-6">
+	<div ng-show="listMode"> <!-- if list mode is true - no job has been selected, display a nice image in the right panel -->
+		<img src="https://placeimg.com/800/600/tech/sepia " class="img-responsive img-browse"> </img><!-- http://lorempixel.com/800/600/technics/Dummy-Text/ or https://placeimg.com/800/600/tech/sepia cool online image placeholder resouce, can change pic dimensions by change link params -->
+	</div>
+	
+	<div ng-show="!listMode"> <!-- if list mode is false - a job has been selected, display details of that job -->
+	<div class="row">
+		<div class="col-md-8">
+			<h3>{{ selectedJob.title }}</h3>
+			<div> Poster: {{selectedJob.name}}</div>
+			<div> Date Posted: {{selectedJob.datetime | date:'medium'}} </div>
+		</div>
+		
+		<div class="col-md-4 title">
+			<!-- price-tag is taken from main.css take this out -->
+			<div class="price-tag">
+				${{ selectedJob.total }}
+				<div ng-show="isJobCreator(selectedJob) && isJobOpen(selectedJob)"> <!-- if the current user created the job being displayed, display buttons to edit, cancel -->	
+					<div class="btn-group">
+						<a href="" class="btn btn-info">Modify</a> <!-- Use a Bootstrap button -->	
+						<a href="" class="btn btn-info dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></a>
+						<ul class="dropdown-menu">
+							<li><a href="" data-toggle="modal" data-target="#editJobPopOut">Edit This Job</a></li>	<!-- Uses the bootstrap Modal plugin, this is a dialog box/popup window that is displayed on top of the current page, example: http://www.w3schools.com/bootstrap/tryit.asp?filename=trybs_modal&stacked=h-->						        
+							<li class="divider"></li>
+							<li><a href="" ng-click="cancelJob(selectedJob.$id)">Cancel This Job</a></li>
+						</ul>
+					</div>
+				</div>
+				
+				<div ng-show="isJobOpen(selectedJob) && !isJobCreator(selectedJob) && !alreadyOffered">
+					<button class="btn btn-danger" data-toggle="modal" data-target="#makeOfferdPopOut">Make an Offer</button>
+				</div>
+				
+				<div ng-show="isJobAssignee(selectedJob) && !isJobCompleted(selectedJob)">
+					<button class="btn btn-danger" ng-click="completeJob(selectedJob.$id)">Complete</button> <!-- calls the completeJob function from the appController that was loaded with this page by the router -->	
+				</div>
+			</div>
+		</div>
+	</div>
+	
+			<br>
+			
+			<!-- Info -->
+			<div class="row">
+				<div class="col-md-12"> <!-- take up entire panel sace - 12/12 -->
+					<div class="panel panel-default"> <!--  a simple bootstrap display panel box makes a nice way to display the different sub-panels of the selected Job -->
+					    <div class="panel-heading">
+					        <h3 class="panel-title">Job Info</h3>
+					    </div>
+					    <div class="panel-body">
+					        {{ selectedJob.description }}
+					    </div>
+					</div>			
+				</div>	
+			</div>
+
+			<!-- OFFERS -->			
+			<div class="row">
+				<div class="col-md-12">
+					<div class="panel panel-default">
+					    
+					    <div class="panel-heading">
+					        <h3 class="panel-title">Current Offers</h3>
+					    </div>
+					    
+					    <div class="panel-body">
+								
+								<div class="title" ng-hide="offers && offers.length > 0"> <!-- hide this div if theres is any offers, offers > 0 -->
+									<span>No Offers Yet</span>
+								</div>	
+
+								<div class="row" ng-repeat="offer in offers"> <!-- repeat the div enough times to display every offer that was made -->
+									<div class="col-md-10">
+										<!-- if the offer has been accepted then display "accepted" -->
+										<button ng-show="offer.accepted" class="btn btn-info"> Offer Accepted. ${{offer.total}} From: {{offer.name}} </button>
+										<!-- if the person logged in is the creator and they haven't accepted an offer yet then display "accept offer", embedded with functionality to accept the offer", once the offer has been accepted they will not this option again -->
+										<button ng-show="isJobCreator(selectedJob) && isJobOpen(selectedJob)" class="btn btn-success" ng-click="acceptOffer(offer.$id,offer.uid)">Accept Offer ${{offer.total}} From: {{offer.name}}</button>
+										<!-- if the person logged in is the one who made he offer and it's still open then display "cancel offer" embedded with option to cancel the offer, once the offer has been cancled they will not this option again -->
+										<button ng-show="isOfferMaker(offer) && isJobOpen(selectedJob)" class="btn btn-danger" ng-click="cancelOffer(offer.$id)">Cancel Offer - ${{offer.total}}</button>
+									</div>
+								</div>
+								<br>
+					    </div>
+					</div>			
+				</div>	
+			</div>
+
+			<!-- Questions -->
+			<div class="row">
+				<div class="col-md-12">
+					<div class="panel panel-default">
+					    
+					    <div class="panel-heading">
+					        <h3 class="panel-title">Questions</h3>
+					    </div>
+					    
+					    <div class="panel-body">
+					    	<div class="title" ng-hide="questions && questions.length > 0"> <!-- don't show this if there are any questions -->
+									<span>No Questions Yet</span>
+								</div><br>
+								
+								<div class="row" ng-repeat="quest in questions"> <!-- repeat the div enough times to display every offer that was made -->
+									<div class="col-md-12">
+										<div class="well well-sm cmt">
+											<span class="cmt-title">{{quest.name}}:</span>
+											<span class="cmt-time pull-right"> {{quest.datetime | date:'medium'}} </span> <br>
+									    <span>{{quest.content}}</span>
+										</div>
+									</div>									
+								</div><br>
+
+								<div class="row" ng-show="isJobOpen(selectedJob)"> <!-- only show this question box if the Job is still open -->
+									<div class="col-md-12">
+										<form ng-submit="addQuestion()">	 <!-- use ng-submit to run the addQuestion function in the app controller when the form is submitted  -->
+									      <input type="text" ng-model="content" cols="10" rows="10" class="form-control" placeholder="Ask a Question" required><br> <!-- use ng-model to submit the question function when the form is submitted  -->
+											<span class="pull-right">
+												<input type="submit" class="btn btn-info" value="Question">
+											</span>
+										</form>
+									</div>
+								</div>
+
+					    </div>
+
+					</div>			
+				</div>	
+			</div>
+			
+	</div>
+
+</div>
+
+<div ng-include="'views/popOuts(modal)/editJobPopOut.html'"></div>
+<div ng-include="'views/popOuts(modal)/makeOfferPopOut.html'"></div>
