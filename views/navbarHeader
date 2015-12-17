@@ -1,0 +1,43 @@
+<nav class="navbar navbar-info" ng-controller="appController">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle the nav </span> <!-- for screen readers accessability - not really needed -->
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#/">OddJobs</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">      
+      <ul class="nav navbar-nav navbar-left">
+        <li ng-show="signedIn()"><a href="" data-toggle="modal" data-target="#postJobPopOut">Post an Odd Job</a></li>
+        <li><a href="#/browse">Browse Odd Jobs</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li ng-hide="signedIn()"><a href="#/loginPage">Login</a></li> <!-- show this button if user is signed in, redirect to login page (through app router) when clicked -->
+        <li ng-hide="signedIn()"><a href="#/registerPage">Register</a></li>  <!-- show this button if user is signed in, redirect to register page (through app router) when clicked -->
+		
+        <li ng-show="signedIn()" class="dropdown"> <!-- use the signed function to tell if user is signed in and only display pic, name, logout and change pass if they are (using ng-show) -->
+          <a href="" class="dropdown-toggle" data-toggle="dropdown">
+            <img src="http://img2.wikia.nocookie.net/__cb20130607025329/creepypasta/images/3/38/Avatar-blank.jpg" class="img-circle gravatar"> </img><!-- This gravatar formatting is in main.css -->
+            &nbsp;
+            {{user.profile.name}}
+            <span class="mdi-navigation-expand-more"></span></a>
+          <ul class="dropdown-menu"> <!-- this list will be in the form of a twitter bootstrap dropdown -->
+            <li><a href="" data-toggle="modal" data-target="#changePassPopOut"> Change Password</a></li> <!-- loads the change password pop out pag using the modal bototstrap function -->
+            <li><a href="" ng-click="logout()"> Logout </a></li> <!-- Uses the logout function in the appController to logout -->
+          </ul>
+        </li>
+      </ul>
+
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+
+  <div ng-show="signedIn()" ng-include="'views/popOuts(modal)/changePassPopOut.html'"></div>
+  <div ng-show="signedIn()" ng-include="'views/popOuts(modal)/postJobPopOut.html'"></div>
+
+</nav>
+
